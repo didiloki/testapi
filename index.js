@@ -24,6 +24,12 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 
 //routes
+
+app.get("/",(req, res)=>{
+    res.json({ "message" :  "You are not allowed to access this page"})
+
+})
+
 app.get("/api/",(req, res)=>{
 
     User.find({}).then(suc =>{
