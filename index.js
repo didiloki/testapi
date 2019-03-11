@@ -5,7 +5,7 @@ const bodyParser = require('body-parser')
 const User = require('./model/Users')
 var cors = require('cors')
 
-
+let PORT = process.env.PORT
 //Set up default mongoose connection
 var mongoDB = 'mongodb://admin:admin1234@ds147225.mlab.com:47225/crude';
 
@@ -53,7 +53,4 @@ app.post("/api/",(req, res)=>{
 
 
 
-app.listen(process.env.PORT,"localhost", (req, res)=>{
-    console.log("ready");
-    
-})
+app.listen(PORT)
