@@ -47,7 +47,7 @@ app.post("/api/",(req, res)=>{
 
 
 
-app.listen(4000,"localhost", (req, res)=>{
+app.listen(process.env.PORT,"localhost", (req, res)=>{
     console.log("ready");
     
 })
