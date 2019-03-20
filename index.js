@@ -2,55 +2,106 @@ const mongodb = require('mongodb')
 const mongoose = require('mongoose')
 const express = require('express')
 const bodyParser = require('body-parser')
-const User = require('./model/Users')
+const Student = require('./model/Students')
 var cors = require('cors')
 
-let PORT = process.env.PORT
+let PORT = process.env.PORT //4000 //
 //Set up default mongoose connection
 var mongoDB = 'mongodb://admin:admin1234@ds147225.mlab.com:47225/crude';
 
 const app = express()
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+    extended: false
+}));
 
 app.use(cors())
 
-mongoose.connect(mongoDB, { useNewUrlParser: true });
-// Get Mongoose to use the global promise library
-mongoose.Promise = global.Promise;
-//Get the default connection
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
+mongoose.connect(mongoDB, {
+    useNewUrlParser: true,
+    useCreateIndex: true
+});
+
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function () {
+    // we're connected!
+});
 
 //routes
 
-app.get("/",(req, res)=>{
-    res.json({ "message" :  "You are not allowed to access this page"})
+app.get("/", (req, res) => {
+    if (req.body.api_key) {
+        console.log("ebere");
+
+    }
+    res.status(403).json({
+        "message": "Ebere Doesnt Want You Access This Page!",
+        "passage": "Wakanda Forever"
+    })
 
 })
 
-app.get("/api/",(req, res)=>{
+app.get("/api/", (req, res) => {
 
-    User.find({}).then(suc =>{
-        res.json(suc)
-    }).catch(err =>{
+    Student.find({}).then(suc => {
+        let data = {
+            "status": 200,
+            "message": "Wakanda Forever!",
+            "title": "Uploads from everyone",
+            "link": "https://www.techmice.co/photos/",
+            "description": "",
+            "modified": "2019-03-21T01:48:14Z",
+            "generator": "https://www.techmice.co/",
+            "data": {
+                "data": {
+                    "students": suc
+                }
+            }
+        };
+
+        res.status(200).json(data)
+    }).catch(err => {
         console.log(err);
-        
+
     })
 })
 
 
-app.post("/api/",(req, res)=>{
+app.post("/api/", (req, res) => {
 
-    let user = new User(req.body)
-    console.log(user);
-    
-    user.save()
+    let student = new Student(req.body)
+    console.log(student);
 
-   res.json({ "status" : "success", "message" : "Saved!"})
+    student.save().then((s) => {
+        console.log(s);
+
+        res.status(200).send({
+            "status": "success",
+            "message": "Saved!"
+        })
+    }).catch(e => {
+        if (e.code === 11000) {
+            res.status(403).send({
+                "status": "error",
+                "message": "Ebere Said NO!!!! Deal with it!",
+                "problem": "duplicate email address"
+            })
+        } else {
+            res.status(403).send({
+                "status": "error",
+                "message": "Ebere Said NO!!!! Deal with it!"
+            })
+        }
+
+    })
+
+
 })
 
 
 
-app.listen(PORT)
+app.listen(PORT, "localhost", () => {
+    console.log(`connected on ${PORT}`)
+})
