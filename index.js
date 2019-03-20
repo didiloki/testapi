@@ -102,6 +102,7 @@ app.post("/api/", (req, res) => {
 
 
 
-app.listen(PORT, "localhost", () => {
-    console.log(`connected on ${PORT}`)
-})
+app.listen(PORT)
+//     , "localhost", () => {
+//     console.log(`connected on ${PORT}`)
+// })
