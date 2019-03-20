@@ -32,13 +32,13 @@ db.once('open', function () {
 //routes
 
 app.get("/", (req, res) => {
-    if (req.body.api_key) {
+    if (req.param.api_key) {
         console.log("ebere");
 
     }
     res.status(403).json({
-        "message": "Ebere Doesnt Want You Access This Page!",
-        "passage": "Wakanda Forever"
+        "message": "Mbaku Knows Your Here and Doesnt Want You Access This Page!",
+        "passage": "Wakanda Forever!!!!!"
     })
 
 })
@@ -48,6 +48,10 @@ app.get("/api/", (req, res) => {
     Student.find({}).then(suc => {
         let data = {
             "status": 200,
+            "total_rescued": {
+                "hero": "Super Ebere!",
+                "total_number": suc.length
+            },
             "message": "Wakanda Forever!",
             "title": "Uploads from everyone",
             "link": "https://www.techmice.co/photos/",
@@ -72,7 +76,7 @@ app.get("/api/", (req, res) => {
 app.post("/api/", (req, res) => {
 
     let student = new Student(req.body)
-    console.log(student);
+    // console.log(student);
 
     student.save().then((s) => {
         console.log(s);
@@ -85,13 +89,13 @@ app.post("/api/", (req, res) => {
         if (e.code === 11000) {
             res.status(403).send({
                 "status": "error",
-                "message": "Ebere Said NO!!!! Deal with it!",
+                "message": "Ebere Cant Have Duplicate Emails!",
                 "problem": "duplicate email address"
             })
         } else {
             res.status(403).send({
                 "status": "error",
-                "message": "Ebere Said NO!!!! Deal with it!"
+                "message": "Mbaku Said NO!!!! Deal with it!"
             })
         }
 
